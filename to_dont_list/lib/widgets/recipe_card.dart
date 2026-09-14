@@ -27,7 +27,8 @@ class RecipeCard extends StatelessWidget {
         child: Text('${recipe.cookTime}'),
       ),
       title: Text(recipe.name),
-      subtitle: Text('${recipe.category} - ${recipe.ingredientCount()} ingredients'),
+      subtitle:
+          Text('${recipe.category} - ${recipe.ingredientCount()} ingredients'),
     );
   }
 }
