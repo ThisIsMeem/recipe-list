@@ -1,89 +1,87 @@
 // Started with https://docs.flutter.dev/development/ui/widgets-intro
 import 'package:flutter/material.dart';
-import 'package:to_dont_list/objects/item.dart';
-import 'package:to_dont_list/widgets/to_do_items.dart';
-import 'package:to_dont_list/widgets/to_do_dialog.dart';
+import 'package:to_dont_list/objects/recipe.dart';
+import 'package:to_dont_list/widgets/recipe_card.dart';
+import 'package:to_dont_list/widgets/recipe_dialog.dart';
 
-class ToDoList extends StatefulWidget {
-  const ToDoList({super.key});
+class RecipeList extends StatefulWidget {
+  const RecipeList({super.key});
 
   @override
-  State createState() => _ToDoListState();
+  State createState() => _RecipeListState();
 }
 
-class _ToDoListState extends State<ToDoList> {
-  final List<Item> items = [const Item(name: "add more todos")];
-  final _itemSet = <Item>{};
+class _RecipeListState extends State<RecipeList> {
+  final List<Recipe> recipes = [
+    const Recipe(
+        name: "Toast",
+        ingredients: ["bread", "butter"],
+        cookTime: 5,
+        category: "Breakfast"),
+  ];
 
-  void _handleListChanged(Item item, bool completed) {
+  final _favorites = <Recipe>{};
+
+  void _handleRecipeTap(Recipe recipe) {
     setState(() {
-      // When a user changes what's in the list, you need
-      // to change _itemSet inside a setState call to
-      // trigger a rebuild.
-      // The framework then calls build, below,
-      // which updates the visual appearance of the app.
-
-      items.remove(item);
-      if (!completed) {
-        print("Completing");
-        _itemSet.add(item);
-        items.add(item);
+      if (_favorites.contains(recipe)) {
+        _favorites.remove(recipe);
       } else {
-        print("Making Undone");
-        _itemSet.remove(item);
-        items.insert(0, item);
+        _favorites.add(recipe);
       }
     });
   }
 
-  void _handleDeleteItem(Item item) {
+  void _handleDeleteRecipe(Recipe recipe) {
     setState(() {
-      print("Deleting item");
-      items.remove(item);
+      recipes.remove(recipe);
     });
   }
 
-  void _handleNewItem(String itemText, TextEditingController textController) {
+  void _handleNewRecipe(String name, String category, int cookTime) {
     setState(() {
-      print("Adding new item");
-      Item item = Item(name: itemText);
-      items.insert(0, item);
-      textController.clear();
+      recipes.insert(
+          0,
+          Recipe(
+              name: name,
+              ingredients: const [],
+              cookTime: cookTime,
+              category: category));
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('To Do List'),
-        ),
-        body: ListView(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          children: items.map((item) {
-            return ToDoListItem(
-              item: item,
-              completed: _itemSet.contains(item),
-              onListChanged: _handleListChanged,
-              onDeleteItem: _handleDeleteItem,
-            );
-          }).toList(),
-        ),
-        floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.add),
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (_) {
-                    return ToDoDialog(onListAdded: _handleNewItem);
-                  });
-            }));
+      appBar: AppBar(
+        title: const Text('My Recipes'),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        children: recipes.map((recipe) {
+          return RecipeCard(
+            recipe: recipe,
+            onTap: _handleRecipeTap,
+            onDelete: _handleDeleteRecipe,
+          );
+        }).toList(),
+      ),
+      floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (_) {
+                  return RecipeDialog(onRecipeAdded: _handleNewRecipe);
+                });
+          }),
+    );
   }
 }
 
 void main() {
   runApp(const MaterialApp(
-    title: 'To Do List',
-    home: ToDoList(),
+    title: 'My Recipes',
+    home: RecipeList(),
   ));
 }
