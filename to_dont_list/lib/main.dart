@@ -8,7 +8,9 @@ class RecipeList extends StatefulWidget {
   const RecipeList({super.key});
 
   @override
-  State createState() => _RecipeListState();
+  State createState() { 
+    return _RecipeListState();
+  }
 }
 
 class _RecipeListState extends State<RecipeList> {
@@ -80,8 +82,11 @@ class _RecipeListState extends State<RecipeList> {
 }
 
 void main() {
-  runApp(const MaterialApp(
+  runApp(MaterialApp(
     title: 'My Recipes',
+    theme: ThemeData(
+    colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+  ),
     home: RecipeList(),
   ));
 }

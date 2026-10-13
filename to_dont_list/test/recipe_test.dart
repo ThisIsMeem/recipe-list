@@ -2,6 +2,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:to_dont_list/objects/recipe.dart';
 
 void main() {
+  test("This test checks ingredient numbers",(){
+    const recipe = Recipe(category: "Meal",
+    name: "Pasta",
+    ingredients: ["Flour", "Eggs"],
+    cookTime: 30);
+    expect(recipe.ingredientCount(), 3);
+  });
   test('Recipe stores its values correctly', () {
     const recipe = Recipe(
         name: "Pasta",
