@@ -29,7 +29,9 @@ class RecipeCard extends StatelessWidget {
         foregroundColor: colors.onPrimary,
         child: Text('${recipe.cookTime}'),
       ),
-      title: Text(recipe.name),
+      title: Text(recipe.name, style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              fontWeight: FontWeight.bold,
+            ),),
       subtitle: Text('${recipe.category} - ${recipe.ingredients} ingredients'),
     );
   }
