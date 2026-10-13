@@ -16,6 +16,7 @@ class RecipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return ListTile(
       onTap: () {
         onTap(recipe);
@@ -24,6 +25,8 @@ class RecipeCard extends StatelessWidget {
         onDelete(recipe);
       },
       leading: CircleAvatar(
+        backgroundColor: colors.primary,
+        foregroundColor: colors.onPrimary,
         child: Text('${recipe.cookTime}'),
       ),
       title: Text(recipe.name),
