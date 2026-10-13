@@ -86,6 +86,7 @@ void main() {
     title: 'My Recipes',
     theme: ThemeData(
     colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+    fontFamily: 'Tinos',
   ),
     home: RecipeList(),
   ));
