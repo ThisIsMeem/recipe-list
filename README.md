@@ -15,6 +15,10 @@ Add a recipe with a name, category, and cook time. Recipes appear as cards showi
 
 To store recipes real quick so you remember them.
 
+# Theme and Custom Font
+
+I added an orange theme using `ColorScheme.fromSeed` and the Tinos font from Google Fonts.
+
 ## Screenshots
 
 ![Recipe list](to_dont_list/images/screenshot1.png)
@@ -24,3 +28,5 @@ To store recipes real quick so you remember them.
 ![Typing recipe details](to_dont_list/images/screenshot3.png)
 
 ![Recipe list after adding](to_dont_list/images/screenshot4.png)
+
+![Recipe list after adding](to_dont_list/images/screenshot5.png)
