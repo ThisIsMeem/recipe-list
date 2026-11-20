@@ -3,20 +3,25 @@ import 'package:to_dont_list/objects/item.dart';
 
 typedef GroceryListChangedCallback = Function(GroceryItem item, bool completed);
 typedef GroceryListRemovedCallback = Function(GroceryItem item);
-
+typedef GroceryListEditedCallback = void Function(GroceryItem item);
 class GroceryListItem extends StatefulWidget {
-  GroceryListItem(
-      {required this.item,
-      required this.completed,
-      required this.onListChanged,
-      required this.onDeleteItem})
-      : super(key: ObjectKey(item));
+  GroceryListItem({
+  required this.item,
+  required this.completed,
+  required this.onListChanged,
+  required this.onDeleteItem,
+  required this.onEditItem,
+
+}) : super(key: ObjectKey(item));
 
   final GroceryItem item;
   final bool completed;
 
   final GroceryListChangedCallback onListChanged;
   final GroceryListRemovedCallback onDeleteItem;
+  final GroceryListEditedCallback onEditItem;
+ 
+
 
   Color _getColor(BuildContext context) {
     // The theme depends on the BuildContext because different
@@ -42,7 +47,77 @@ class GroceryListItem extends StatefulWidget {
   
 }
 class _GroceryListItemState extends State<GroceryListItem> {
-  @override
+
+  Future<void> _editItem() async {
+  final nameController = TextEditingController(
+    text: widget.item.name,
+  );
+
+  final quantityController = TextEditingController(
+    text: widget.item.quantity.toString(),
+  );
+
+  try {
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Edit Grocery Item'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Item name',
+                ),
+              ),
+              TextField(
+                controller: quantityController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Quantity',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final newName = nameController.text.trim();
+                final newQuantity =
+                    int.tryParse(quantityController.text.trim());
+
+                if (newName.isEmpty ||
+                    newQuantity == null ||
+                    newQuantity < 1) {
+                  return;
+                }
+
+                widget.item.name = newName;
+                widget.item.quantity = newQuantity;
+                widget.onEditItem(widget.item);
+
+                Navigator.pop(dialogContext);
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  } finally {
+    nameController.dispose();
+    quantityController.dispose();
+  }
+}
+@override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
@@ -61,6 +136,7 @@ class _GroceryListItemState extends State<GroceryListItem> {
         widget.item.name,
         style: widget._getTextStyle(context),
       ),
+  
       //OverflowBar implementation from https://api.flutter.dev/flutter/widgets/OverflowBar-class.html
       trailing: OverflowBar(
         spacing: 8,
@@ -71,11 +147,15 @@ class _GroceryListItemState extends State<GroceryListItem> {
             },child: const Text('+'),),
           ElevatedButton(key: const Key("Decrement"), onPressed: (){
             setState((){widget.item.decrement();});
+          
             //if item quantity reaches 0 it is deleted
             if (widget.item.quantity == 0){
                 setState((){widget.onDeleteItem(widget.item);});
             }
             }, child: const Text('-')),
+          //edit item button
+          ElevatedButton(key: const Key("Edit"), onPressed: _editItem,
+            child: const Text('Edit'),),
           //delete item buttom
           ElevatedButton(key: const Key("Remove"), onPressed: (){
             setState((){widget.onDeleteItem(widget.item);});

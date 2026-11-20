@@ -83,6 +83,14 @@ class _ToDoListState extends State<ToDoList> {
     _save();
   }
 
+  void _handleEditItem(GroceryItem item) {
+    setState(() {
+      // The item has already been updated inside the edit dialog.
+      // We just rebuild the list so it shows the new details.
+    });
+    _save();
+  }
+
   void _handleNewItem(String itemText, TextEditingController textController) {
     setState(() {
       print("Adding new item");
@@ -108,7 +116,7 @@ class _ToDoListState extends State<ToDoList> {
               completed: _itemSet.contains(item),
               onListChanged: _handleListChanged,
               onDeleteItem: _handleDeleteItem,
-              // onQuantityChanged: _save,   // <-- uncomment in commit 3
+              onEditItem: _handleEditItem,
             );
           }).toList(),
         ),

@@ -4,12 +4,12 @@ class GroceryItem {
   GroceryItem({required this.name, this.quantity = 1});
 
   int quantity;
-  final String name;
+  String name;
   
-  increment(){
+  void increment(){
     quantity ++;
   }
-  decrement(){
+  void decrement(){
     quantity --;
   }
 }
