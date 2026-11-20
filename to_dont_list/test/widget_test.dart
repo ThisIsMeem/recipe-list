@@ -34,10 +34,16 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: Scaffold(
             body: GroceryListItem(
-                item: GroceryItem(name: "test", quantity: 1),
-                completed: true,
-                onListChanged: (GroceryItem item, bool completed) {},
-                onDeleteItem: (GroceryItem item) {}))));
+            item: GroceryItem(name: "test", quantity: 1),
+            completed: true,
+            onListChanged: (GroceryItem item, bool completed) {},
+            onDeleteItem: (GroceryItem item) {},
+            // Added onEditItem callbacks to both tests because GroceryListItem
+            // now requires this parameter. The empty callbacks let the existing
+            // tests run without changing what they test.
+            onEditItem: (GroceryItem item) {},
+))));
+  
     final textFinder = find.text('test');
 
     // Use the `findsOneWidget` matcher provided by flutter_test to verify
@@ -53,7 +59,11 @@ void main() {
                 item: GroceryItem(name: "test", quantity: 1),
                 completed: true,
                 onListChanged: (GroceryItem item, bool completed) {},
-                onDeleteItem: (GroceryItem item) {}))));
+                onDeleteItem: (GroceryItem item) {},
+                // Added onEditItem callbacks to both tests because GroceryListItem
+                // now requires this parameter. The empty callbacks let the existing
+                // tests run without changing what they test.
+                onEditItem: (GroceryItem item) {},))));
     final quantityFinder = find.text("1");
     final avatarFinder = find.byType(CircleAvatar);
 
